@@ -1,15 +1,21 @@
-package exam;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 public class Facturas {
+	public static int num;
+	
 	public static void main(String[] args) {
 		Scanner leer = new Scanner(System.in);
-		int num=0;
-		boolean correcto=false;
-		menu(leer, num, correcto);
+		int [] codigos= new int [100];
+		double [] precios = new double [100];
+		String [] nombres = new String [100];
+		boolean correcto = false;
+		do {
+			menu(leer, num, correcto);
+			opciones(leer, num, correcto,nombres, codigos, precios);
+		}while(num!=5);
 	}
 	
-	public static void menu (Scanner leer, int num, boolean correcto) {
+	public static void menu (Scanner leer, int n, boolean correcto) {
 		System.out.println("Elija una opción");
 		System.out.println("1 - Ingresar Productos");
 		System.out.println("2 - Ingresar Factura");
@@ -36,5 +42,27 @@ public class Facturas {
 			}
 		}while(correcto);
 		
+	}
+	
+	public static void opciones(Scanner leer, int num, boolean correcto, String[] nombres, int[] codigos, double[] precios) {
+		String elegir ="";		
+		switch (num) {
+		case 1:
+			System.out.println("¿Desea ingresar un producto? Digite Si o No");
+			elegir = leer.next().toLowerCase();
+			break;
+		case 2:
+			System.out.println("Opcion2");
+			break;
+		case 3:
+			System.out.println("Opcion3");
+			break;
+		case 4:
+			System.out.println("Opcion4");
+			break;
+		case 5:
+			System.out.println("Gracias por usar el programa");
+			break;
+		}
 	}
 }
