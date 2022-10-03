@@ -1,21 +1,27 @@
 import java.util.Scanner;
 import java.util.InputMismatchException;
 public class Facturas {
+	public static int aux;
 	public static int num;
+	public static int contProductos;
+	public static String [] nombres = new String [100];
+	public static int [] codigos= new int [100];
+	public static double [] precios = new double [100];
+	public static int [] nFacturas = new int [100];
+	public static int nProductosFacturas;
 	
 	public static void main(String[] args) {
 		Scanner leer = new Scanner(System.in);
-		int [] codigos= new int [100];
-		double [] precios = new double [100];
-		String [] nombres = new String [100];
+		
 		boolean correcto = false;
+		contProductos=0;
 		do {
-			menu(leer, num, correcto);
-			opciones(leer, num, correcto,nombres, codigos, precios);
+			menu(leer, correcto);
+			opciones(leer, correcto);
 		}while(num!=5);
 	}
 	
-	public static void menu (Scanner leer, int n, boolean correcto) {
+	public static void menu (Scanner leer, boolean correcto) {
 		System.out.println("Elija una opción");
 		System.out.println("1 - Ingresar Productos");
 		System.out.println("2 - Ingresar Factura");
@@ -44,18 +50,131 @@ public class Facturas {
 		
 	}
 	
-	public static void opciones(Scanner leer, int num, boolean correcto, String[] nombres, int[] codigos, double[] precios) {
-		String elegir ="";		
+	public static void opciones(Scanner leer, boolean correcto) {
+		String elegir;
 		switch (num) {
 		case 1:
-			System.out.println("¿Desea ingresar un producto? Digite Si o No");
-			elegir = leer.next().toLowerCase();
+			do {
+				try {
+					System.out.println("¿Desea ingresar un producto? Digite Si o No");
+					elegir = leer.next().toLowerCase();
+					if (!elegir.equals("si") && !elegir.equals("no")) {
+						throw new ArithmeticException();
+					}
+					if (elegir.equals("si")) {
+						do {
+							aux=0;
+							String nombreAux="";
+							System.out.println("Digite el nombre del producto");
+							nombres[contProductos]=leer.next();
+							nombreAux=nombres[contProductos];
+							//Colocamos -1 para que no quede en un bucle porque el ultimo si es igual
+							for(int i=0; i<contProductos; i++) {
+								if(nombres[i].equals(nombreAux)) {
+									aux=1;
+									System.out.println("Producto repetido - Vuelva a intentarlo");
+								} 
+							}
+						}while(aux==1);
+						
+						do {
+							try {
+								aux=0;
+								int codigosAux=0;
+								System.out.println("Digite el codigo del producto");
+								codigos[contProductos]=leer.nextInt();
+								if(codigos[contProductos]<0) {
+									throw new ArithmeticException();
+								}
+								for(int i=0; i<contProductos; i++) {
+									codigosAux=codigos[contProductos];
+									if(codigos[i]==codigosAux) {
+										aux=1;
+										System.out.println("Codigo repetido - Vuelva a intentarlo");
+									} 
+								}
+							}catch(ArithmeticException ae) {
+								System.out.println("Los codigos son solamente con numeros positivos");
+								aux=1;
+							} catch (InputMismatchException ime) {
+								System.out.println("Ingrese correctamente el codigo");
+								leer.next();
+								aux=1;
+							}
+						}while(aux==1);
+						
+						do {
+							try {
+								System.out.println("Digite el precio del producto");
+								precios[contProductos]=leer.nextDouble();
+								if(precios[contProductos]<=0) {
+									throw new ArithmeticException();
+								}
+								
+								correcto=false;
+							}catch(ArithmeticException ae) {
+								System.out.println("Digite bien el precio");
+								correcto = true;
+							} catch (InputMismatchException ime) {
+								System.out.println("Ingrese correctamente el precio");
+								leer.next();
+								correcto = true;
+							}
+						}while(correcto);
+						
+						contProductos++;
+						correcto=true;
+					}
+					if(elegir.equals("no")) {
+						correcto=false;
+					}
+				}catch (ArithmeticException ae) {
+					System.out.println("Digite Si o No correctamente");
+					correcto=true;
+				}
+			}while(correcto);
 			break;
 		case 2:
-			System.out.println("Opcion2");
+			nProductosFacturas=0;
+			do {
+				int codigoAux=0;
+				System.out.println("¿Desea ingresar una factura? Digite Si o No");
+				elegir = leer.next().toLowerCase();
+				try {
+					if (!elegir.equals("si") && !elegir.equals("no")) {
+						throw new ArithmeticException();
+					}
+					
+					do {
+						if (elegir.equals("si")) {
+							aux=0;
+							System.out.println("Digite el codigo del producto");
+							codigoAux=leer.nextInt();
+							for(int i=0; i<contProductos; i++) {
+								if (codigos[i]==codigoAux) {
+									nProductosFacturas++;
+									break;
+								} else {
+									aux=1;
+									System.out.println("Digite bien el codigo");
+								}
+							}
+						}
+					}while(aux==1);
+					
+					correcto=false;
+				}catch(ArithmeticException ae) {
+					System.out.println("Digite Si o No correctamente");
+					correcto=true;
+				}
+			}while(correcto);
 			break;
 		case 3:
-			System.out.println("Opcion3");
+			System.out.println("Lista de productos");
+			System.out.println("Codigos"+ "	" + "Nombres"+ "	" + "Precios.U");
+			for(int i=0; i<contProductos; i++) {
+				System.out.println(codigos[i]+ "	" + nombres[i]+ "	" + precios[i]);
+			}
 			break;
 		case 4:
 			System.out.println("Opcion4");
