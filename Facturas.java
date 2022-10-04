@@ -16,6 +16,7 @@ public class Facturas {
 	public static double [] subtotal = new double[100] ;
 	public static double total;
 	public static int []cantidad = new int [100];
+	public static double [] totalFacturas = new double [100];
 	
 	public static void main(String[] args) {
 		Scanner leer = new Scanner(System.in);
@@ -229,7 +230,7 @@ public class Facturas {
 			}
 			break;
 		case 4:
-			System.out.println("Lista de Facturas");
+			System.out.println("Lista de la Factura");
 			System.out.println("Codigos"+ "	" + "Nombres"+ "	" + "Precios.U" + "	" + "Cantidad" + "	" + "Subtotal");
 			for(int i=0; i<nProductosFacturas; i++) {
 				System.out.println(codigosFacturas[i]+ "	 " + nombresFactura[i]+ "	 " + preciosUFactura[i] + "		 " + cantidad[i] + "		 "+subtotal[i]);
