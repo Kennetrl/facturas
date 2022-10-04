@@ -9,10 +9,17 @@ public class Facturas {
 	public static double [] precios = new double [100];
 	public static int [] nFacturas = new int [100];
 	public static int nProductosFacturas;
+	public static int cantidadProductos;
+	public static String [] nombresFactura= new String [100];
+	public static double [] preciosUFactura= new double[100];
+	public static int [] codigosFacturas= new int[100];
+	public static double [] subtotal = new double[100] ;
+	public static double total;
+	public static int []cantidad = new int [100];
 	
 	public static void main(String[] args) {
 		Scanner leer = new Scanner(System.in);
-		
+		total=0;
 		boolean correcto = false;
 		contProductos=0;
 		do {
@@ -134,38 +141,83 @@ public class Facturas {
 				}
 			}while(correcto);
 			break;
+			
 		case 2:
-			nProductosFacturas=0;
+			String elegir1="";
 			do {
+				correcto=false;
 				int codigoAux=0;
-				System.out.println("¿Desea ingresar una factura? Digite Si o No");
-				elegir = leer.next().toLowerCase();
 				try {
-					if (!elegir.equals("si") && !elegir.equals("no")) {
+					System.out.println("¿Desea ingresar una factura? Digite Si o No");
+					elegir1 = leer.next().toLowerCase();
+					if (!elegir1.equals("si") && !elegir1.equals("no")) {
 						throw new ArithmeticException();
 					}
 					
 					do {
-						if (elegir.equals("si")) {
-							aux=0;
-							System.out.println("Digite el codigo del producto");
-							codigoAux=leer.nextInt();
-							for(int i=0; i<contProductos; i++) {
-								if (codigos[i]==codigoAux) {
-									nProductosFacturas++;
-									break;
-								} else {
-									aux=1;
-									System.out.println("Digite bien el codigo");
+						try {
+							if (elegir1.equals("si")) {
+								aux=0;
+								System.out.println("Digite el codigo del producto");
+								codigoAux=leer.nextInt();
+								for(int i=0; i<contProductos; i++) {
+									if (codigos[i]==codigoAux) {
+										codigosFacturas[nProductosFacturas]= codigoAux;
+										nombresFactura[nProductosFacturas]=nombres[codigoAux-1];
+										preciosUFactura[nProductosFacturas]=precios[codigoAux-1];
+										
+										aux=0;
+										break;
+									} else {
+										aux=1;
+									}
+								}
+								if(aux==1){
+									throw new ArithmeticException();
 								}
 							}
+						}catch(ArithmeticException ae){
+							System.out.println("Digite correctamente el codigo");
+						} catch (InputMismatchException ime) {
+							System.out.println("Digite correctamente el codigo");
+							leer.next();
+							aux=1;
 						}
 					}while(aux==1);
+					do {
+						
+						try {
+							if(elegir1.equals("si")) {
+								System.out.println("Digite la cantidad de productos");
+								cantidadProductos=leer.nextInt();
+								subtotal[nProductosFacturas]=codigoAux*cantidadProductos;
+								cantidad[nProductosFacturas]=cantidadProductos;
+								total+=subtotal[nProductosFacturas];
+								
+								if(cantidadProductos<0) {
+									throw new ArithmeticException();
+								}
+								nProductosFacturas++;
+							}
+							correcto=false;
+						}catch (ArithmeticException ae){
+							System.out.println("Digite cantidades positivas");
+							correcto=true;
+						}catch(InputMismatchException ime) {
+							System.out.println("Digite especificamente numeros");
+							correcto=true;
+						}
+					}while(correcto);
 					
-					correcto=false;
 				}catch(ArithmeticException ae) {
 					System.out.println("Digite Si o No correctamente");
 					correcto=true;
+				}
+				
+				if(elegir1.equals("si")) {
+					correcto=true;
+				} else {
+					correcto=false;
 				}
 			}while(correcto);
 			break;
@@ -177,7 +229,12 @@ public class Facturas {
 			}
 			break;
 		case 4:
-			System.out.println("Opcion4");
+			System.out.println("Lista de Facturas");
+			System.out.println("Codigos"+ "	" + "Nombres"+ "	" + "Precios.U" + "	" + "Cantidad" + "	" + "Subtotal");
+			for(int i=0; i<nProductosFacturas; i++) {
+				System.out.println(codigosFacturas[i]+ "	 " + nombresFactura[i]+ "	 " + preciosUFactura[i] + "		 " + cantidad[i] + "		 "+subtotal[i]);
+			}
+			System.out.println("Total: " + total);
 			break;
 		case 5:
 			System.out.println("Gracias por usar el programa");
